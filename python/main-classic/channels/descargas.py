@@ -182,7 +182,7 @@ def menu(item):
     logger.info()
 
     # Opciones disponibles para el menu
-    op = ["Descargar", "Eliminar de la lista", "Reiniciar descarga", "Descargar desde..."]
+    op = ["Descargar", "Eliminar de la lista", "Reiniciar descarga", "Descargar desde...", "Reproducir"]
 
     opciones = []
 
@@ -198,6 +198,7 @@ def menu(item):
         opciones.append(op[1])  # Eliminar de la lista
 
     if item.downloadStatus == 2:  # descarga completada
+        opciones.append(op[4])  # Reproducir
         opciones.append(op[1])  # Eliminar de la lista
         opciones.append(op[2])  # Reiniciar descarga
 
@@ -230,6 +231,11 @@ def menu(item):
             filetools.remove(os.path.join(config.get_setting("downloadpath"), item.downloadFilename))
             
         update_json(item.path, {"downloadStatus" : STATUS_CODES.stoped, "downloadComplete" :  0 , "downloadProgress" : 0})
+
+    # Reproducir
+    if opciones[seleccion] == op[4]:
+        item.url = filetools.join(DOWNLOAD_PATH, item.downloadFilename)
+        return platformtools.play_video(item)
 
     platformtools.itemlist_refresh()
 
